@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import { Role } from '../App';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-
-interface MenuViewProps {
-    role: Role;
-}
 
 const mockMenu = [
     { id: 1, name: 'Hamburguesa Suprema', category: 'Comida', price: 12.50, desc: 'Doble carne, queso cheddar, tocino y salsa BBQ.', img: '🍔' },
@@ -13,10 +8,8 @@ const mockMenu = [
     { id: 4, name: 'Limonada Mineral', category: 'Bebidas', price: 3.00, desc: 'Limonada fresca con agua mineral y menta.', img: '🍋' },
 ];
 
-const MenuView: React.FC<MenuViewProps> = ({ role }) => {
+const MenuView: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState('Todas');
-    const canManage = role === 'CEO' || role === 'GERENTE';
-
     const categories = ['Todas', 'Comida', 'Botana', 'Bebidas'];
 
     const filteredMenu = activeCategory === 'Todas'
@@ -30,15 +23,13 @@ const MenuView: React.FC<MenuViewProps> = ({ role }) => {
                     <h1>Gestión de Menú</h1>
                     <p className="subtitle">Administra los platillos, bebidas y botanas</p>
                 </div>
-                {canManage && (
-                    <button className="btn-primary">
-                        <Plus size={20} /> Nuevo Platillo
-                    </button>
-                )}
+                <button className="btn-primary">
+                    <Plus size={20} /> Nuevo Platillo
+                </button>
             </div>
 
             <div className="card" style={{ marginBottom: '2rem', padding: '1rem' }}>
-                <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto' }}>
+                <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
                     {categories.map(cat => (
                         <button
                             key={cat}
@@ -69,16 +60,14 @@ const MenuView: React.FC<MenuViewProps> = ({ role }) => {
                             {item.desc}
                         </p>
 
-                        {canManage && (
-                            <div className="card-actions" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
-                                <button className="btn-outline" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                                    <Edit2 size={16} style={{ marginRight: '0.5rem' }} /> Editar
-                                </button>
-                                <button className="btn-outline" style={{ color: '#E53E3E', borderColor: '#E53E3E' }}>
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        )}
+                        <div className="card-actions" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                            <button className="btn-outline" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                                <Edit2 size={16} style={{ marginRight: '0.5rem' }} /> Editar
+                            </button>
+                            <button className="btn-outline" style={{ color: '#E53E3E', borderColor: '#E53E3E' }}>
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

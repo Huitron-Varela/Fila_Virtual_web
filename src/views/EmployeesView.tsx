@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
-import { Role } from '../App';
 import { Plus, Edit2, Trash2, Search } from 'lucide-react';
-
-interface EmployeesViewProps {
-    role: Role;
-}
 
 const mockEmployees = [
     { id: 1, name: 'Pepito Pérez', role: 'GERENTE', avatar: 'https://ui-avatars.com/api/?name=Pepito+Perez', orders: 150, email: 'pepito@restaurant.com', phone: '555-0101' },
-    { id: 2, name: 'María García', role: 'EMPLEADO_COCINA', avatar: 'https://ui-avatars.com/api/?name=Maria+Garcia', orders: 342, email: 'maria@restaurant.com', phone: '555-0102' },
-    { id: 3, name: 'Juan López', role: 'EMPLEADO_ENTREGA', avatar: 'https://ui-avatars.com/api/?name=Juan+Lopez', orders: 412, email: 'juan@restaurant.com', phone: '555-0103' },
-    { id: 4, name: 'Ana Martínez', role: 'EMPLEADO_CAJERO', avatar: 'https://ui-avatars.com/api/?name=Ana+Martinez', orders: 890, email: 'ana@restaurant.com', phone: '555-0104' },
+    { id: 2, name: 'María García', role: 'COCINA', avatar: 'https://ui-avatars.com/api/?name=Maria+Garcia', orders: 342, email: 'maria@restaurant.com', phone: '555-0102' },
+    { id: 3, name: 'Juan López', role: 'ENTREGA', avatar: 'https://ui-avatars.com/api/?name=Juan+Lopez', orders: 412, email: 'juan@restaurant.com', phone: '555-0103' },
+    { id: 4, name: 'Ana Martínez', role: 'CAJERO', avatar: 'https://ui-avatars.com/api/?name=Ana+Martinez', orders: 890, email: 'ana@restaurant.com', phone: '555-0104' },
 ];
 
-const EmployeesView: React.FC<EmployeesViewProps> = ({ role }) => {
+const EmployeesView: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const canManage = role === 'CEO' || role === 'GERENTE';
 
     const getRoleBadgeClass = (employeeRole: string) => {
         if (employeeRole === 'GERENTE') return 'role-gerente';
-        if (employeeRole === 'EMPLEADO_COCINA') return 'role-cocina';
-        if (employeeRole === 'EMPLEADO_CAJERO') return 'role-cajero';
+        if (employeeRole === 'COCINA') return 'role-cocina';
+        if (employeeRole === 'CAJERO') return 'role-cajero';
         return 'role-entrega';
     };
 
@@ -28,17 +22,6 @@ const EmployeesView: React.FC<EmployeesViewProps> = ({ role }) => {
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    if (!canManage) {
-        return (
-            <div className="view-container fade-in">
-                <div className="card text-center" style={{ padding: '3rem' }}>
-                    <h3>Acceso Denegado</h3>
-                    <p className="text-muted">No tienes permisos para ver esta sección.</p>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="view-container fade-in">
@@ -74,7 +57,7 @@ const EmployeesView: React.FC<EmployeesViewProps> = ({ role }) => {
                             <div>
                                 <h3 style={{ marginBottom: '0.25rem', fontSize: '1.1rem' }}>{employee.name}</h3>
                                 <span className={`employee-role-badge ${getRoleBadgeClass(employee.role)}`}>
-                                    {employee.role.replace('EMPLEADO_', '')}
+                                    {employee.role}
                                 </span>
                             </div>
                         </div>

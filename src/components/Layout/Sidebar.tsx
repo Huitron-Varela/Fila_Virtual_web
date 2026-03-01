@@ -1,54 +1,44 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
     Home,
     Users,
     MenuSquare,
     Settings,
-    ChevronLeft,
-    ChevronRight,
-    TrendingUp
+    TrendingUp,
+    LogOut,
+    Menu
 } from 'lucide-react';
-import { Role } from '../../App';
 import './Sidebar.css';
 
 interface SidebarProps {
-    role: Role;
     isOpen: boolean;
     toggleSidebar: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
-    const getNavItems = () => {
-        switch (role) {
-            case 'CEO':
-            case 'GERENTE':
-                return [
-                    { name: 'Home', path: '/home', icon: <Home size={20} /> },
-                    { name: 'Empleados', path: '/employees', icon: <Users size={20} /> },
-                    { name: 'Menú', path: '/menu', icon: <MenuSquare size={20} /> },
-                    { name: 'Perfil', path: '/profile', icon: <Settings size={20} /> },
-                ];
-            case 'EMPLEADO_COCINA':
-            case 'EMPLEADO_ENTREGA':
-            case 'EMPLEADO_CAJERO':
-                return [
-                    { name: 'Home', path: '/home', icon: <Home size={20} /> },
-                    { name: 'Perfil', path: '/profile', icon: <Settings size={20} /> },
-                ];
-            default:
-                return [];
-        }
-    };
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
+    const navigate = useNavigate();
+    
+    const navItems = [
+        { name: 'Dashboard', path: '/dashboard/home', icon: <Home size={20} /> },
+        { name: 'Empleados', path: '/dashboard/employees', icon: <Users size={20} /> },
+        { name: 'Menú', path: '/dashboard/menu', icon: <MenuSquare size={20} /> },
+        { name: 'Perfil', path: '/dashboard/profile', icon: <Settings size={20} /> },
+    ];
 
-    const navItems = getNavItems();
+    const handleLogout = () => {
+        navigate('/');
+    };
 
     return (
         <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <div className="sidebar-header">
-                {isOpen && <h2 className="brand-name">AlToque<span className="text-primary">M</span></h2>}
-                <button className="toggle-btn" onClick={toggleSidebar}>
-                    {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+                <h2 className="brand-name text-primary" style={{ fontSize: '1.25rem', textAlign: 'center', width: '100%' }}>
+                    <span className="brand-icon">A</span>
+                    <span className="brand-text">ntigravity.</span>
+                </h2>
+                <button className="toggle-btn" onClick={toggleSidebar} style={{ position: 'absolute', right: '-16px', background: 'white', border: '1px solid var(--border-color)', borderRadius: '50%', padding: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                    <Menu size={16} />
                 </button>
             </div>
 
@@ -60,19 +50,26 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
                         className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                         title={!isOpen ? item.name : undefined}
                     >
-                        <span className="nav-icon">{item.icon}</span>
-                        {isOpen && <span className="nav-text">{item.name}</span>}
+                        <div className="nav-icon">{item.icon}</div>
+                        <span className="nav-text">{item.name}</span>
                     </NavLink>
                 ))}
             </nav>
 
             <div className="sidebar-footer">
-                {isOpen && (
-                    <div className="user-role-badge">
-                        <TrendingUp size={14} className="text-primary" />
-                        <span>Role: {role.replace('EMPLEADO_', '')}</span>
-                    </div>
-                )}
+                <button 
+                    onClick={handleLogout}
+                    className="nav-link" 
+                    style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', color: 'var(--text-muted)' }}
+                    title={!isOpen ? "Cerrar Sesión" : undefined}
+                >
+                    <div className="nav-icon"><LogOut size={20} /></div>
+                    <span className="nav-text">Cerrar Sesión</span>
+                </button>
+                <div className="user-role-badge">
+                    <div className="nav-icon"><TrendingUp size={16} /></div>
+                    <span className="nav-text">CEO Dashboard</span>
+                </div>
             </div>
         </aside>
     );
