@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Mail, ArrowLeft, Building, Sun, Moon } from 'lucide-react';
-import './WelcomeView.css';
+import { Lock, Mail, ArrowLeft, Building, Sun, Moon } from 'lucide-react';
+import '../Welcome/WelcomeView.css';
 
 const LoginView: React.FC = () => {
     const navigate = useNavigate();
@@ -34,8 +34,8 @@ const LoginView: React.FC = () => {
             justifyContent: 'center',
             padding: '2rem',
             position: 'relative',
-            background: 'linear-gradient(180deg, var(--welcome-gradient-top) 0%, var(--welcome-bg) 100%)',
-            transition: 'background 0.5s ease',
+            backgroundImage: 'linear-gradient(180deg, var(--welcome-gradient-top) 0%, var(--welcome-bg) 100%)',
+            transition: 'background-image 0.5s ease',
         }}>
             {/* Theme Toggle Button for Login View */}
             <button 
@@ -58,7 +58,6 @@ const LoginView: React.FC = () => {
                     left: '2rem',
                     background: 'transparent',
                     border: '1px solid transparent',
-                    color: 'black',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -71,14 +70,14 @@ const LoginView: React.FC = () => {
                     transition: 'all 0.3s ease'
                 }}
                 onMouseOver={(e) => {
-                    e.currentTarget.style.color = 'white';
+                    e.currentTarget.style.color = 'black';
                     e.currentTarget.style.background = 'var(--primary-color)';
                     e.currentTarget.style.borderColor = 'var(--primary-color)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                     e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 87, 51, 0.4)';
                 }}
                 onMouseOut={(e) => {
-                    e.currentTarget.style.color = 'black';
+                    e.currentTarget.style.color = 'white';
                     e.currentTarget.style.background = 'transparent';
                     e.currentTarget.style.borderColor = 'transparent';
                     e.currentTarget.style.transform = 'translateY(0)';

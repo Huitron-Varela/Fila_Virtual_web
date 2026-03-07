@@ -5,7 +5,6 @@ import {
     Users,
     MenuSquare,
     Settings,
-    TrendingUp,
     LogOut,
     Menu
 } from 'lucide-react';
@@ -33,12 +32,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     return (
         <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
             <div className="sidebar-header">
-                <h2 className="brand-name text-primary" style={{ fontSize: '1.25rem', textAlign: 'center', width: '100%' }}>
-                    <span className="brand-icon">A</span>
-                    <span className="brand-text">ntigravity.</span>
+                <h2 className="brand-name text-primary" style={{ fontSize: '1.25rem', textAlign: 'center', width: '100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <img src="/src/img/logot.png" alt="Logo" style={{ width: '40px', height: 'auto', objectFit: 'contain' }} />
+                    <span className="brand-text" style={{ fontFamily: 'var(--font-primary)', fontWeight: 800 }}>AlToque</span>
                 </h2>
-                <button className="toggle-btn" onClick={toggleSidebar} style={{ position: 'absolute', right: '-16px', background: 'white', border: '1px solid var(--border-color)', borderRadius: '50%', padding: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                    <Menu size={16} />
+                <button className="toggle-btn" onClick={toggleSidebar} style={{ position: 'absolute', right: '-16px', background: 'var(--color-danger)', color: 'white', border: 'none', borderRadius: '50%', padding: '6px', boxShadow: '0 4px 6px rgba(239, 68, 68, 0.3)', zIndex: 10, display: 'flex', transition: 'transform 0.3s ease' }}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+                    <Menu size={18} fill="currentColor" />
                 </button>
             </div>
 
@@ -59,17 +60,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             <div className="sidebar-footer">
                 <button 
                     onClick={handleLogout}
-                    className="nav-link" 
-                    style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', color: 'var(--text-muted)' }}
+                    className="nav-link logout-btn" 
+                    style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', color: 'var(--color-danger)', transition: 'all 0.2s ease' }}
                     title={!isOpen ? "Cerrar Sesión" : undefined}
                 >
                     <div className="nav-icon"><LogOut size={20} /></div>
-                    <span className="nav-text">Cerrar Sesión</span>
+                    <span className="nav-text" style={{ fontWeight: 600 }}>Cerrar Sesión</span>
                 </button>
-                <div className="user-role-badge">
-                    <div className="nav-icon"><TrendingUp size={16} /></div>
-                    <span className="nav-text">CEO Dashboard</span>
-                </div>
             </div>
         </aside>
     );

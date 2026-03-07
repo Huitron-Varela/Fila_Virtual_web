@@ -61,11 +61,11 @@
 }
 
 .stat-change.positive {
-    color: #38A169;
+    color: var(--color-success);
 }
 
 .stat-change.negative {
-    color: #E53E3E;
+    color: var(--color-danger);
 }
 
 .modern-table {
@@ -143,12 +143,12 @@
 
 .role-cocina {
     background: rgba(56, 161, 105, 0.1);
-    color: #38A169;
+    color: var(--color-success);
 }
 
 .role-cajero {
     background: rgba(221, 107, 32, 0.1);
-    color: #DD6B20;
+    color: var(--color-warning);
 }
 
 .role-entrega {

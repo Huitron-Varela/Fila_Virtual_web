@@ -1,5 +1,5 @@
-import React from 'react';
-import { Menu, Plus, Bell } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, Sun, Moon } from 'lucide-react';
 import './TopBar.css';
 
 interface TopBarProps {
@@ -7,8 +7,21 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ toggleSidebar }) => {
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem('app-theme') === 'dark';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('app-theme', isDarkMode ? 'dark' : 'light');
+        if (isDarkMode) {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+    }, [isDarkMode]);
+
     return (
-        <header className="top-bar glass-panel" style={{ 
+        <header className={`top-bar glass-panel ${isDarkMode ? 'dark-mode' : ''}`} style={{ 
             borderRadius: '0', 
             borderLeft: 'none', 
             borderRight: 'none', 
@@ -21,19 +34,19 @@ const TopBar: React.FC<TopBarProps> = ({ toggleSidebar }) => {
                 <button className="mobile-menu-btn" onClick={toggleSidebar}>
                     <Menu size={24} />
                 </button>
-                <div className="search-container">
-                    <input type="text" placeholder="Buscar..." className="search-input" style={{ background: '#f8fafc', border: '1px solid var(--border-color)', borderRadius: '8px' }} />
+                <div style={{ fontWeight: 600, fontSize: '1.2rem', fontFamily: '"Inter", sans-serif', color: 'var(--text-main)', display: 'none' }}>
+                    Dashboard
                 </div>
             </div>
 
             <div className="top-bar-right">
-                <button className="icon-btn" style={{ background: '#f8fafc', borderRadius: '8px', padding: '8px' }}>
-                    <Plus size={20} color="var(--text-muted)" />
-                </button>
-
-                <button className="icon-btn" style={{ background: '#f8fafc', borderRadius: '8px', padding: '8px', position: 'relative' }}>
-                    <Bell size={20} color="var(--text-muted)" />
-                    <span className="notification-dot" style={{ top: '6px', right: '6px' }}></span>
+                <button 
+                    className="icon-btn theme-toggle-btn" 
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    style={{ background: 'transparent', borderRadius: '50%', padding: '8px', cursor: 'pointer', border: 'none', transition: 'all 0.3s ease' }}
+                    title="Cambiar Tema"
+                >
+                    {isDarkMode ? <Sun size={24} color="var(--text-main)" /> : <Moon size={24} color="var(--text-main)" />}
                 </button>
 
                 <div className="avatar" style={{ border: '2px solid white', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
