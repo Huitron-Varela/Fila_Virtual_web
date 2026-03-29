@@ -8,6 +8,7 @@ import MenuView from './views/Dashboard/MenuView';
 import ProfileView from './views/Dashboard/ProfileView';
 import WelcomeView from './views/Welcome/WelcomeView';
 import LoginView from './views/Login/LoginView';
+import RegisterView from './views/Register/RegisterView';
 
 function App() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,6 +23,7 @@ function App() {
                 {/* Rutas Públicas */}
                 <Route path="/" element={<WelcomeView />} />
                 <Route path="/login" element={<LoginView />} />
+                <Route path="/register" element={<RegisterView />} />
                 
                 {/* Rutas Protegidas del Dashboard */}
                 {/* ✅ SOLUCIÓN: Pasamos el JSX directamente al element */}

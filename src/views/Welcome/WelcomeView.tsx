@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, LogIn, TrendingUp, Shield, Zap, Mail, Phone, Sun, Moon, ArrowUp } from 'lucide-react';
+import { LogIn, TrendingUp, AlertCircle, XCircle, Smartphone, Bell, Users, ThumbsUp, Zap, Sun, Moon, ArrowUp, Check } from 'lucide-react';
+import { welcomeTranslations as translations } from '../../locales/welcomeTranslations';
+import LegalModal from '../../components/Legal/LegalModal';
+import { TermsAndConditions, PrivacyPolicy } from '../../components/Legal/legalTexts';
 import './WelcomeView.css';
 
 const WelcomeView: React.FC = () => {
     const navigate = useNavigate();
-    const [isDarkMode, setIsDarkMode] = React.useState(() => {
-        // Initialize state directly from localStorage if possible
+    const [lang, setLang] = useState<'es' | 'en'>('es');
+    const [isDarkMode, setIsDarkMode] = useState(() => {
         const saved = localStorage.getItem('app-theme');
         return saved === 'dark';
     });
-    const [isScrolled, setIsScrolled] = React.useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isTermsOpen, setIsTermsOpen] = useState(false);
+    const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+    const [acceptedLegal, setAcceptedLegal] = useState(false);
 
-    React.useEffect(() => {
-        // Save to localStorage whenever theme changes
+    useEffect(() => {
         localStorage.setItem('app-theme', isDarkMode ? 'dark' : 'light');
     }, [isDarkMode]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
         };
@@ -41,6 +46,9 @@ const WelcomeView: React.FC = () => {
     }, []);
 
     const toggleTheme = () => setIsDarkMode(!isDarkMode);
+    const toggleLang = () => setLang(lang === 'es' ? 'en' : 'es');
+
+    const t = translations[lang];
 
     return (
         <div className={`welcome-page ${isDarkMode ? 'dark-theme' : ''}`}>
@@ -53,14 +61,24 @@ const WelcomeView: React.FC = () => {
                 </div>
                 
                 <div className="welcome-nav-links">
-                    <a href="#problemas">Problemas</a>
-                    <a href="#soluciones">Soluciones</a>
-                    <a href="#beneficios">Beneficios</a>
-                    <a href="#inversion">Inversión</a>
-                    <a href="#contacto">Contáctanos</a>
+                    <a href="#problemas">{t.nav.problems}</a>
+                    <a href="#soluciones">{t.nav.solutions}</a>
+                    <a href="#beneficios">{t.nav.benefits}</a>
+                    <a href="#contacto">{t.nav.contact}</a>
                 </div>
 
                 <div className="nav-actions">
+                    <button 
+                        className="lang-toggle" 
+                        onClick={toggleLang}
+                        title={`Cambiar a ${t.nav.language}`}
+                        aria-label="Toggle language"
+                    >
+                        <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>
+                            {t.nav.langCode === 'en' ? '🇺🇸' : '🇲🇽'}
+                        </span>
+                        <span>{t.nav.language}</span>
+                    </button>
                     <button 
                         className="theme-toggle" 
                         onClick={toggleTheme}
@@ -73,7 +91,7 @@ const WelcomeView: React.FC = () => {
                         onClick={() => navigate('/login')}
                     >
                         <LogIn size={20} />
-                        <span>Iniciar Sesión</span>
+                        <span>{t.nav.login}</span>
                     </button>
                 </div>
             </nav>
@@ -84,31 +102,34 @@ const WelcomeView: React.FC = () => {
                 <div className="animate-slide-up">
                     <div className="hero-pill">
                         <span className="hero-pill-dot"></span>
-                        Revolucionando la gestión en México
+                        {t.hero.pill}
                     </div>
                     
                     <h1 className="hero-title">
-                        Control total<br />
-                        bajo demanda<br />
-                        para tu negocio.
+                        {t.hero.title.split('\n').map((line, i) => (
+                            <React.Fragment key={i}>
+                                {line}
+                                <br />
+                            </React.Fragment>
+                        ))}
                     </h1>
                     
                     <p className="hero-subtitle">
-                        La plataforma que transforma la administración informal en un entorno predecible, seguro y garantizado para tu restaurante.
+                        {t.hero.subtitle}
                     </p>
 
                     <div className="hero-actions">
                         <button 
                             className="btn-primary"
-                            onClick={() => navigate('/login')}
+                            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
                         >
-                            Únete ahora
+                            {t.hero.btnRegister}
                         </button>
                         <button 
                             className="btn-outline"
-                            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                            onClick={() => window.document.getElementById('problemas')?.scrollIntoView({ behavior: 'smooth' })}
                         >
-                            Conoce más
+                            {t.hero.btnInfo}
                         </button>
                     </div>
                 </div>
@@ -126,8 +147,8 @@ const WelcomeView: React.FC = () => {
                             <Check size={20} strokeWidth={3} />
                         </div>
                         <div>
-                            <h4>Gestión Verificada</h4>
-                            <p>Datos e inventarios validados en tiempo real</p>
+                            <h4>AlToque</h4>
+                            <p>Gestión verificada</p>
                         </div>
                     </div>
                 </div>
@@ -140,24 +161,23 @@ const WelcomeView: React.FC = () => {
                 <section id="problemas" className="info-section animate-on-scroll">
                     <div className="section-content">
                         <div className="section-header">
-                            <h2 className="section-title">¿Administración caótica?</h2>
-                            <p className="section-subtitle">Los problemas más comunes que enfrentan los restaurantes informales.</p>
+                            <h2 className="section-title">{t.problem.title}</h2>
                         </div>
                         <div className="features-grid">
                             <div className="feature-card">
-                                <div className="feature-icon danger-icon"><TrendingUp size={24} /></div>
-                                <h3>Falta de control de inventario</h3>
-                                <p>Pérdidas no detectadas y sobre-compras debido a la falta de trazabilidad en tiempo real.</p>
+                                <div className="feature-icon danger-icon"><AlertCircle size={24} /></div>
+                                <h3>{t.problem.p1Title}</h3>
+                                <p>{t.problem.p1Desc}</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon danger-icon"><Check size={24} /></div>
-                                <h3>Gestión de turnos desorganizada</h3>
-                                <p>Complicaciones para el control de asistencia y asignación de responsabilidades diarias.</p>
+                                <div className="feature-icon danger-icon"><AlertCircle size={24} /></div>
+                                <h3>{t.problem.p2Title}</h3>
+                                <p>{t.problem.p2Desc}</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon danger-icon"><Shield size={24} /></div>
-                                <h3>Información fragmentada</h3>
-                                <p>Reportes en papel o Excel que no se actualizan y generan decisiones erróneas.</p>
+                                <div className="feature-icon danger-icon"><XCircle size={24} /></div>
+                                <h3>{t.problem.p3Title}</h3>
+                                <p>{t.problem.p3Desc}</p>
                             </div>
                         </div>
                     </div>
@@ -167,70 +187,107 @@ const WelcomeView: React.FC = () => {
                 <section id="soluciones" className="info-section alternate-bg animate-on-scroll">
                     <div className="section-content">
                         <div className="section-header">
-                            <h2 className="section-title">Nuestra <span>Solución</span></h2>
-                            <p className="section-subtitle">AlToque centraliza y digitaliza todas tus operaciones con facilidad.</p>
+                            <h2 className="section-title">{t.solution.title}</h2>
+                            <p className="section-subtitle">{t.solution.subtitle}</p>
                         </div>
                         <div className="features-grid">
                             <div className="feature-card">
-                                <div className="feature-icon success-icon"><Zap size={24} /></div>
-                                <h3>Digitalización inmediata</h3>
-                                <p>De la libreta a la nube en minutos. Interfaz intuitiva para cualquier tipo de usuario.</p>
+                                <div className="feature-icon success-icon"><Smartphone size={24} /></div>
+                                <h3>{t.solution.s1Title}</h3>
+                                <p>{t.solution.s1Desc}</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon success-icon"><Shield size={24} /></div>
-                                <h3>Control de Accesos</h3>
-                                <p>Perfiles para Dueño, Gerente y Empleado con permisos y vistas totalmente personalizadas.</p>
+                                <div className="feature-icon success-icon"><Bell size={24} /></div>
+                                <h3>{t.solution.s2Title}</h3>
+                                <p>{t.solution.s2Desc}</p>
                             </div>
                             <div className="feature-card">
-                                <div className="feature-icon success-icon"><TrendingUp size={24} /></div>
-                                <h3>Analítica Integrada</h3>
-                                <p>Dashboard en tiempo real con indicadores clave sobre ventas, inventario y rendimiento.</p>
+                                <div className="feature-icon success-icon"><Users size={24} /></div>
+                                <h3>{t.solution.s3Title}</h3>
+                                <p>{t.solution.s3Desc}</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Section: Beneficios e Inversión */}
+                {/* Section: Beneficios */}
                 <section id="beneficios" className="info-section animate-on-scroll">
                     <div className="section-content">
                         <div className="section-header">
-                            <h2 className="section-title">Beneficios e <span>Inversión</span></h2>
-                            <p className="section-subtitle">Maximiza tus ganancias reduciendo mermas y tiempo administrativo.</p>
+                            <h2 className="section-title">{t.benefits.title}</h2>
                         </div>
-                        <div className="benefits-container">
-                            <div className="benefit-item">
-                                <h3>+30%</h3>
-                                <p>Aumento en eficiencia operativa y reducción de tiempos en cierres de caja.</p>
+                        <div className="features-grid">
+                            <div className="feature-card">
+                                <div className="feature-icon"><TrendingUp size={24} className="contact-icon" style={{margin:0}} /></div>
+                                <h3>{t.benefits.b1Title}</h3>
+                                <p>{t.benefits.b1Desc}</p>
                             </div>
-                            <div className="benefit-item">
-                                <h3>-15%</h3>
-                                <p>Reducción promediada en mermas por mal uso de inventarios.</p>
+                            <div className="feature-card">
+                                <div className="feature-icon"><ThumbsUp size={24} className="contact-icon" style={{margin:0}} /></div>
+                                <h3>{t.benefits.b2Title}</h3>
+                                <p>{t.benefits.b2Desc}</p>
                             </div>
-                            <div className="benefit-item">
-                                <h3>ROI Rápido</h3>
-                                <p>El sistema se paga solo en el primer mes gracias al ahorro generado.</p>
+                            <div className="feature-card">
+                                <div className="feature-icon"><Zap size={24} className="contact-icon" style={{margin:0}} /></div>
+                                <h3>{t.benefits.b3Title}</h3>
+                                <p>{t.benefits.b3Desc}</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Section: Contacto */}
+                {/* Section: Contacto / Formulario */}
                 <section id="contacto" className="info-section alternate-bg animate-on-scroll">
-                    <div className="section-content contact-content">
-                        <div className="section-header">
-                            <h2 className="section-title">Contáctanos</h2>
-                            <p className="section-subtitle">¿Listo para transformar tu restaurante? Hablemos hoy mismo.</p>
-                        </div>
-                        <div className="contact-cards">
-                            <div className="contact-card">
-                                <Mail size={32} className="contact-icon" />
-                                <h3>Correo Electrónico</h3>
-                                <p>contacto@altoque.com</p>
-                            </div>
-                            <div className="contact-card">
-                                <Phone size={32} className="contact-icon" />
-                                <h3>Llámanos</h3>
-                                <p>+52 (55) 1234 5678</p>
+                    <div className="section-content">
+                        <div className="contact-form-container">
+                            <div className="contact-form-card">
+                                <h3>
+                                    {t.contact.title.split('\n').map((line, i) => (
+                                        <React.Fragment key={i}>
+                                            {line}
+                                            <br />
+                                        </React.Fragment>
+                                    ))}
+                                </h3>
+                                <p>{t.contact.subtitle}</p>
+                                <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+                                    <div className="form-group">
+                                        <label>{t.contact.formName}</label>
+                                        <input type="text" placeholder={t.contact.formName} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{t.contact.formBusiness}</label>
+                                        <input type="text" placeholder={t.contact.formBusiness} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{t.contact.formPhone}</label>
+                                        <input type="tel" placeholder={t.contact.formPhone} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{t.contact.formEmail}</label>
+                                        <input type="email" placeholder={t.contact.formEmail} required />
+                                    </div>
+                                    <div className="form-group checkbox-group">
+                                        <label className="checkbox-label">
+                                            <input 
+                                                type="checkbox" 
+                                                required 
+                                                checked={acceptedLegal}
+                                                onChange={(e) => setAcceptedLegal(e.target.checked)}
+                                            />
+                                            <span>
+                                                {t.contact.legalPrefix}
+                                                <button type="button" className="text-link" onClick={() => setIsTermsOpen(true)}>{t.contact.legalTerms}</button>
+                                                {t.contact.legalAnd}
+                                                <button type="button" className="text-link" onClick={() => setIsPrivacyOpen(true)}>{t.contact.legalPrivacy}</button>
+                                                {t.contact.legalSuffix}
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" className="btn-primary submit-btn" disabled={!acceptedLegal}>
+                                        {t.contact.formSubmit}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -245,14 +302,14 @@ const WelcomeView: React.FC = () => {
                         <span className="welcome-logo-text">AlToque</span>
                     </div>
                     <div className="footer-links">
-                        <a href="#problemas">Problemas</a>
-                        <a href="#soluciones">Soluciones</a>
-                        <a href="#beneficios">Beneficios</a>
-                        <a href="#contacto">Contacto</a>
+                        <a href="#problemas">{t.nav.problems}</a>
+                        <a href="#soluciones">{t.nav.solutions}</a>
+                        <a href="#beneficios">{t.nav.benefits}</a>
+                        <a href="#contacto">{t.nav.contact}</a>
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <p>&copy; {new Date().getFullYear()} AlToque. Todos los derechos reservados.</p>
+                    <p>&copy; {new Date().getFullYear()} AlToque. {t.footer.rights}</p>
                 </div>
             </footer>
 
@@ -264,6 +321,14 @@ const WelcomeView: React.FC = () => {
             >
                 <ArrowUp size={24} />
             </button>
+
+            {/* Legal Modals */}
+            <LegalModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} title={t.contact.legalTerms}>
+                <TermsAndConditions />
+            </LegalModal>
+            <LegalModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} title={t.contact.legalPrivacy}>
+                <PrivacyPolicy />
+            </LegalModal>
         </div>
     );
 };
